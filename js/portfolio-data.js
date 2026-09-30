@@ -40,7 +40,6 @@ window.PORTFOLIO = [
   {
     id: 'photo', title: 'PHOTO STORIES', tab: 'left', text: '#3c302a',
     deco: [
-      { type: 'slot', src: 'assets/covers/photo-babyexpo.jpg', x: 752, y: 88, w: 229, h: 220, rot: -4 },
       { type: 'slot', src: 'assets/covers/photo-fragments.jpg', x: 183, y: 108, w: 229, h: 202, rot: 6 },
       { type: 'img', src: 'assets/deco/pin-pink.png', x: 285, y: 57, w: 37, h: 54, rot: 0 },
     ],
@@ -59,7 +58,7 @@ window.PORTFOLIO = [
   },
   {
     id: 'spot', title: 'SPOT NEWS', tab: 'right', text: '#faf3e6',
-    deco: [],
+    deco: [{ type: 'slot', src: 'assets/covers/photo-babyexpo.jpg', x: 752, y: 88, w: 229, h: 220, rot: -4 }],
     cards: [
       { tag: 'SPOT NEWS', date: '2026/06/16', cover: 'spot-mexicocity.jpg', link: 'READ STORY →', zh: true,
         url: 'https://spyan-jour.hkbu.edu.hk/2026/06/16/%e4%b8%96%e7%95%8c%e7%9b%83%e6%98%8e%e9%96%8b%e9%91%bc%e6%b8%af%e9%81%8a%e5%ae%a2%e5%8f%8a%e6%b0%91%e7%9c%be%e7%a8%b1%e8%a8%ad%e6%96%bd%e6%9c%aa%e5%ae%8c%e5%96%84/',
