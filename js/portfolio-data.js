@@ -1,0 +1,86 @@
+// Portfolio folders, in page order. Copy text is taken from the Figma design.
+window.PORTFOLIO = [
+  {
+    id: 'data', title: 'DATA STORIES', tab: 'left', text: '#faf3e6',
+    deco: [{ type: 'slot', src: 'assets/covers/video-c919.jpg', x: 183, y: 108, w: 229, h: 202, rot: 6 }],
+    cards: [
+      { tag: 'DATA STORY', date: '2026/05', cover: 'data-hikingtrail.jpg', link: 'VIEW DATA STORY →', url: 'https://datastory.hkbu.edu.hk/2026/hikingtrail/eng.html',
+        title: 'From “Hiking Trail” to “Photo Spot”: What Traffic Brings to the MacLehose Trail',
+        blurb: 'How social media turned the MacLehose Trail’s East Dam and Sai Wan stretch into a viral photo spot — tracing online buzz, visitor counts, rescues, litter and tree damage along one of the world’s best hiking trails.' },
+      { tag: 'DATA STORY', date: '2026/03/20', cover: 'data-oscars.jpg', link: 'VIEW DATA STORY →', url: 'https://ray24200867.github.io/The-Oscar-winning-situation-of-streaming-platforms/',
+        title: 'How Streaming Platforms Are Reshaping the Oscars (2014–2026)',
+        blurb: 'This data-driven feature examines the rise of streaming platforms at the Oscars, analysing how Netflix, Apple TV+ and Amazon have gained influence between 2014 and 2026.' },
+      { tag: 'DATA STORY', date: '2026/03/06', cover: 'data-4trails.jpg', link: 'VIEW DATA STORY →', url: 'https://datastory.hkbu.edu.hk/tp_society/hk4tuc/',
+        title: 'The “Four Trails” That Could Not Be Finished',
+        blurb: 'This data story examines HK4TUC race data from 2021 to 2026, mapping where withdrawals were concentrated to explore why runners dropped out mid-race.' },
+    ],
+  },
+  {
+    id: 'video', title: 'VIDEO STORIES', tab: 'right', text: '#faf3e6',
+    deco: [
+      { type: 'slot', src: 'assets/covers/video-graduation.jpg', x: 733, y: 88, w: 229, h: 220, rot: 4 },
+      { type: 'img', src: 'assets/deco/clip-blue.png', x: 757, y: 61, w: 37, h: 91, rot: -14 },
+    ],
+    cards: [
+      { tag: 'VIDEO STORY', date: '2026/06/20', cover: 'video-mexico-opener.jpg', link: 'WATCH VIDEO →', zh: true,
+        url: 'https://spyan-jour.hkbu.edu.hk/2026/06/20/%e5%a2%a8%e8%a5%bf%e5%93%a5%e7%9b%b4%e6%93%8a-%e7%9f%ad%e7%89%87%e7%9c%8b%e6%8f%ad%e5%b9%95%e6%88%b0%e5%b0%87%e5%9c%a8%e5%a2%a8%e8%a5%bf%e5%93%a5%e4%b8%8a%e6%bc%94%e3%80%80%e7%90%83/',
+        title: '【墨西哥直擊】短片看揭幕戰將在墨西哥上演　球迷支持心水球隊',
+        blurb: '2026美加墨世界盃將會由墨西哥打頭陣，揭幕戰由墨西哥對南非。在墨西哥旅遊區，連日都見到民眾穿上各式各樣球衣，為自己心儀球隊打氣，當然最搶眼仍然是墨西哥球衣。' },
+      { tag: 'ADAPTED VIDEO STORY', date: '2026/04/18', cover: 'video-c919.jpg', link: 'WATCH VIDEO →', url: 'https://www.facebook.com/reel/1969848386971974',
+        title: 'C919 Makes International Debut in Singapore',
+        blurb: 'China’s domestically developed C919 made its international debut on February 18 in Singapore, one day before the opening of the Singapore Airshow.' },
+      { tag: 'VIDEO STORY', date: '2026/04/18', cover: 'video-pinduoduo.jpg', link: 'WATCH VIDEO →', url: 'https://www.facebook.com/reel/937098515470975',
+        title: 'Foreign employee works for Pinduoduo parcels',
+        blurb: 'Paul Eastman works in the fast-moving world of Pinduoduo parcel consolidation — this is a glimpse into his daily grind at Grab.' },
+      { tag: 'VIDEO STORY', date: '2026/05/01', cover: 'video-graduation.jpg', link: 'WATCH VIDEO →', url: 'https://youtu.be/RHzY5eG9wbg',
+        title: 'Liang Hanyu: A Business Behind Graduation Season',
+        blurb: 'Following a young entrepreneur and PolyU Class of 2025 graduate through his graduation gown business, and the challenges of building it.' },
+    ],
+  },
+  {
+    id: 'photo', title: 'PHOTO STORIES', tab: 'left', text: '#3c302a',
+    deco: [
+      { type: 'slot', src: 'assets/covers/photo-babyexpo.jpg', x: 752, y: 88, w: 229, h: 220, rot: -4 },
+      { type: 'slot', src: 'assets/covers/photo-fragments.jpg', x: 183, y: 108, w: 229, h: 202, rot: 6 },
+      { type: 'img', src: 'assets/deco/pin-pink.png', x: 285, y: 57, w: 37, h: 54, rot: 0 },
+    ],
+    cards: [
+      { tag: 'PHOTO STORY', date: '2026/07/10', cover: 'photo-mexico-worldcup.jpg', link: 'VIEW PHOTOS →', zh: true,
+        url: 'https://spyan-jour.hkbu.edu.hk/2026/07/10/%e3%80%90%e5%9c%96%e8%bc%af%e3%80%91%e5%a2%a8%e8%a5%bf%e5%93%a5%e4%b8%96%e7%95%8c%e7%9b%83%e6%b0%91%e7%9c%be%e5%8f%8d%e6%87%89%e5%90%84%e7%95%b0/',
+        title: '【圖輯】墨西哥世界盃民眾反應各異',
+        blurb: '2026美加墨世界盃，是首次由三國合作舉行世界盃賽事。《新報人》採訪隊連日走訪墨西哥比賽主辦城市，包括墨西哥城和蒙特雷，用鏡頭記錄民眾對這足球盛事的態度。' },
+      { tag: 'PHOTO STORY', date: '2026/01/31', cover: 'photo-fragments.jpg', link: 'VIEW PHOTOS →', url: 'https://www.facebook.com/photo?fbid=122174925614389088&set=pcb.776753761501070',
+        title: 'Fragments of Hong Kong',
+        blurb: 'A collection of photo stories shot across Hong Kong, documenting the city through its streets, people, events and everyday details.' },
+      { tag: 'PHOTO STORY', date: '2026/02/08', cover: 'photo-babyexpo.jpg', link: 'VIEW PHOTOS →', url: 'https://2a82bcda-8fb3-4aca-9eb1-746e6e518409.filesusr.com/ugd/341dff_10eb5cd853a64502ba11f6f89fabcca8.pptx?dn=YU%20XIAHAN%2024200867%20.pptx',
+        title: 'Tiny Feet, Big Business: Inside Hong Kong’s Largest Baby Expo',
+        blurb: 'At Hong Kong’s largest baby expo, parenting is also a booming consumer market — formula, maternity goods, family services and cross-border shoppers.' },
+    ],
+  },
+  {
+    id: 'spot', title: 'SPOT NEWS', tab: 'right', text: '#faf3e6',
+    deco: [],
+    cards: [
+      { tag: 'SPOT NEWS', date: '2026/06/16', cover: 'spot-mexicocity.jpg', link: 'READ STORY →', zh: true,
+        url: 'https://spyan-jour.hkbu.edu.hk/2026/06/16/%e4%b8%96%e7%95%8c%e7%9b%83%e6%98%8e%e9%96%8b%e9%91%bc%e6%b8%af%e9%81%8a%e5%ae%a2%e5%8f%8a%e6%b0%91%e7%9c%be%e7%a8%b1%e8%a8%ad%e6%96%bd%e6%9c%aa%e5%ae%8c%e5%96%84/',
+        title: '【墨西哥直擊】世界盃｜明開鑼墨西哥城熱鬧　港遊客及民眾稱設施未完善',
+        blurb: '2026美加墨世界盃明日開鑼，開幕式及首場比賽將在墨西哥城阿茲特克體育場舉辦，但香港遊客覺得墨西哥未準備好，亦有遊客表示警力加強，對保安工作不太擔心。' },
+      { tag: 'SPOT NEWS', date: '2026/06/13', cover: 'spot-airport.jpg', link: 'READ STORY →', zh: true,
+        url: 'https://spyan-jour.hkbu.edu.hk/2026/06/13/%e4%b8%96%e7%95%8c%e7%9b%83%e9%96%8b%e5%b9%95%e5%89%8d%e5%a4%95%e5%a2%a8%e8%a5%bf%e5%93%a5%e6%a9%9f%e5%a0%b4%e4%bb%8d%e8%b6%95%e5%b7%a5/',
+        title: '【即時新聞】世界盃｜開幕前夕墨西哥機場仍趕工　工人：不知何時完成',
+        blurb: '2026美加墨世界盃即將開幕，然而墨西哥城國際機場翻新工程仍在進行，有工人直言可能趕不上世界盃開幕。記者於開幕前夕實地觀察1號和2號客運大樓的工程進度。' },
+    ],
+  },
+  {
+    id: 'podcast', title: 'PODCAST', tab: 'left', text: '#faf3e6',
+    deco: [
+      { type: 'slot', src: 'assets/covers/podcast-colin.jpg', x: 183, y: 108, w: 229, h: 202, rot: 6 },
+      { type: 'img', src: 'assets/deco/clip-green.png', x: 225, y: -5, w: 121, h: 138, rot: 6 },
+    ],
+    cards: [
+      { tag: 'PODCAST', date: '2026/03/20', cover: 'podcast-colin.jpg', link: 'LISTEN →', url: 'https://soundcloud.com/xiahan-yu/group-d-colin',
+        title: 'Living in Hong Kong: Can music turn a city into home?',
+        blurb: 'Following Colin Aitchison, a British jazz singer at Ned Kelly’s Last Stand in Tsim Sha Tsui, exploring how music, place and time shape a sense of home.' },
+    ],
+  },
+];

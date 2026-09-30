@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Hobbies · Xiahan Yu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Finger+Paint&family=Gaegu:wght@700&family=Inter:wght@400;500&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .home { height: 1311px; }
+  .lady { left: 1225px; top: -8px; width: 96.3px; height: 426.2px; transform-origin: 0 0; transform: rotate(5deg); }
+  .hero-title { left: 0; width: 1440px; top: 188px; text-align: center; font-size: 70px; line-height: 103px; color: var(--brown); }
+  .hero-sub { left: 0; width: 1440px; top: 307px; text-align: center; color: #5c544f; line-height: 1.75; }
+  .hero-sub .zh { font-family: 'LXGW WenKai TC', serif; font-size: 24px; display: block; }
+  .hero-sub .en { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 20px; display: block; margin-top: -4px; }
+
+  .grid { left: 160px; top: 455px; width: 1120px; height: 856px; }
+  .folder { position: absolute; width: 320px; height: 340px; cursor: pointer; }
+  .folder .ly { position: absolute; transform-origin: 0 0; transition: transform .45s cubic-bezier(.34,1.35,.5,1); will-change: transform; }
+  .folder .ly img { position: absolute; left: -10px; top: -10px; }
+  .folder .front { position: absolute; left: 20px; top: 118px; width: 280px; height: 170px; transform-origin: 50% 100%; transition: transform .45s cubic-bezier(.34,1.2,.5,1); }
+  .folder .front img { position: absolute; left: -10px; top: -10px; width: 300px; height: 190px; }
+  .folder:hover .front, .folder:focus-visible .front { transform: perspective(700px) rotateX(-28deg) translateY(4px); }
+  .folder .label { position: absolute; left: 0; top: 296px; width: 320px; text-align: center; font-family: 'Gaegu', cursive; font-weight: 700; font-size: 34px; line-height: 43px; color: var(--ink); transition: transform .3s; }
+  .folder:hover .label { transform: translateY(3px); }
+</style>
+</head>
+<body>
+<div class="stage"><div class="board home">
+  <img class="abs lady" src="assets/deco/pencil-lady.png" alt="">
+  <div id="nav"></div>
+  <div class="abs hero-title f-crayon">Welcome to my space</div>
+  <div class="abs hero-sub"><span class="zh">如果你想多多地了解我，歡迎探索我的方方面面!</span><span class="en">If you wish to know me a little more, wander through every corner of who I am.</span></div>
+  <div class="abs grid" id="grid"></div>
+</div></div>
+
+<script src="js/common.js"></script>
+<script src="js/hobbies-data.js"></script>
+<script>
+document.getElementById('nav').outerHTML = renderNav('Learn more');
+const grid = document.getElementById('grid');
+const tf = ([x, y, r]) => `translate(${x}px, ${y}px) rotate(${-r}deg)`;
+HOBBY_FOLDERS.forEach((f, i) => {
+  const a = document.createElement('a');
+  a.className = 'folder'; a.href = `album.html?a=${f.id}`;
+  a.style.left = (i % 3) * 400 + 'px'; a.style.top = Math.floor(i / 3) * 396 + 'px';
+  a.setAttribute('aria-label', `Open the ${f.label} album`);
+  let html = '';
+  f.layers.forEach(l => {
+    const src = `assets/hobbies/${l.key}.png`;
+    if (l.front) { html += `<div class="front"><img src="${src}" alt=""></div>`; return; }
+    html += `<div class="ly" data-c="${l.c}" data-o="${l.o}" style="left:0;top:0;width:${l.w}px;height:${l.h}px;transform:${tf(l.c)}"><img src="${src}" width="${l.w + 20}" height="${l.h + 20}" alt=""></div>`;
+  });
+  html += `<div class="label">${f.label}</div>`;
+  a.innerHTML = html;
+  const set = key => a.querySelectorAll('.ly').forEach(ly => ly.style.transform = tf(ly.dataset[key].split(',').map(Number)));
+  a.addEventListener('mouseenter', () => set('o'));
+  a.addEventListener('mouseleave', () => set('c'));
+  a.addEventListener('focus', () => set('o'));
+  a.addEventListener('blur', () => set('c'));
+  grid.appendChild(a);
+});
+</script>
+</body>
+</html>

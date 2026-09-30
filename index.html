@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xiahan Yu · Portfolio</title>
+<meta name="description" content="Portfolio of Yu Xiahan (Ray), student journalist at Hong Kong Baptist University.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Finger+Paint&family=Inter:wght@400;500&family=Over+the+Rainbow&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .cover { height: 890px; }
+  .t { position: absolute; white-space: pre; color: #292624; }
+  .t .caret { display: inline-block; width: 3px; height: .62em; margin-left: 4px; background: currentColor; vertical-align: baseline; opacity: 0; }
+  .t.typing .caret { opacity: 1; animation: blink .7s steps(1) infinite; }
+  .t.done .caret { opacity: 0; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  #hi { left: 53px; top: 116px; font-size: 72px; line-height: 147px; opacity: .62; }
+  #tour { left: 902px; top: 215px; font-size: 38px; line-height: 78px; opacity: .85; }
+  #thisis { left: 190px; top: 500px; font-size: 58px; line-height: 118px; opacity: .72; }
+  #xiahan { left: 73px; top: 220px; font-size: 300px; line-height: 300px; letter-spacing: .08em; color: var(--brown); opacity: .85; }
+  #yu { left: 860px; top: 500px; font-size: 300px; line-height: 300px; color: var(--brown); opacity: .85; }
+  #xiahan .caret, #yu .caret { width: 10px; }
+
+  .portrait { left: 399px; top: 250px; width: 623px; height: 640px; opacity: 0; transform-origin: 50% 100%; }
+  .portrait.enter { animation: rise 1.1s cubic-bezier(.2,.8,.25,1) forwards; }
+  @keyframes rise {
+    0%   { opacity: 0; transform: translate(40px, 320px) rotate(-7deg); }
+    55%  { opacity: 1; transform: translate(0, -22px) rotate(2deg); }
+    78%  { transform: translate(0, 6px) rotate(-.6deg); }
+    100% { opacity: 1; transform: translate(0, 0) rotate(0); }
+  }
+  .caption { top: 805px; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 19px; color: #141414; opacity: 0; transition: opacity .8s ease; }
+  .caption.show { opacity: 1; }
+  .skip { position: absolute; right: 40px; bottom: 30px; font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: .12em; color: #6b625b; background: none; border: 0; cursor: pointer; z-index: 60; transition: opacity .4s; }
+  .skip.hide { opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="stage"><div class="board cover" id="board">
+  <div id="nav"></div>
+  <div class="t f-marker" id="xiahan" data-text="XIAHAN" data-speed="130"><span class="typed"></span><span class="caret"></span></div>
+  <div class="t f-marker" id="yu" data-text="YU" data-speed="170"><span class="typed"></span><span class="caret"></span></div>
+  <img class="abs portrait" id="portrait" src="assets/cover/portrait.png" alt="Portrait of Xiahan Yu">
+  <div class="t f-rainbow" id="hi" data-text="Hi. Since you're new here." data-speed="55"><span class="typed"></span><span class="caret"></span></div>
+  <div class="t f-rainbow" id="tour" data-text="let me be ya tour guide" data-speed="48"><span class="typed"></span><span class="caret"></span></div>
+  <div class="t f-rainbow" id="thisis" data-text="This is" data-speed="95"><span class="typed"></span><span class="caret"></span></div>
+  <div class="abs caption" style="left:100px">Student Journalist / Data Journalism</div>
+  <div class="abs caption" style="left:1241px">By Xiahan Yu</div>
+  <button class="skip" id="skip">SKIP INTRO →</button>
+</div></div>
+
+<script src="js/common.js"></script>
+<script>
+document.getElementById('nav').outerHTML = renderNav('Home');
+const order = ['hi', 'tour', 'thisis', 'xiahan', 'yu'];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+let skipped = false;
+
+function finish() {
+  skipped = true;
+  order.forEach(id => {
+    const el = document.getElementById(id);
+    el.querySelector('.typed').textContent = el.dataset.text;
+    el.classList.remove('typing'); el.classList.add('done');
+  });
+  const p = document.getElementById('portrait');
+  p.style.animation = 'none'; p.style.opacity = 1; p.style.transform = 'none';
+  document.querySelectorAll('.caption').forEach(c => c.classList.add('show'));
+  document.getElementById('skip').classList.add('hide');
+  try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
+}
+
+async function type(el) {
+  const text = el.dataset.text, speed = +el.dataset.speed, out = el.querySelector('.typed');
+  el.classList.add('typing');
+  for (let i = 1; i <= text.length; i++) {
+    if (skipped) return;
+    out.textContent = text.slice(0, i);
+    const ch = text[i - 1];
+    await wait(speed * (ch === '.' || ch === ',' ? 4 : ch === ' ' ? 1.6 : 0.7 + Math.random() * 0.6));
+  }
+  await wait(260);
+  el.classList.remove('typing'); el.classList.add('done');
+}
+
+async function intro() {
+  await wait(500);
+  for (const id of order) { if (skipped) return; await type(document.getElementById(id)); }
+  if (skipped) return;
+  await wait(250);
+  document.getElementById('portrait').classList.add('enter');
+  await wait(1000);
+  document.querySelectorAll('.caption').forEach(c => c.classList.add('show'));
+  document.getElementById('skip').classList.add('hide');
+  try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
+}
+
+document.getElementById('skip').addEventListener('click', finish);
+let seen = false; try { seen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {}
+if (seen && !location.hash.includes('intro')) finish(); else intro();
+</script>
+</body>
+</html>

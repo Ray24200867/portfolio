@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Album · Xiahan Yu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Finger+Paint&family=Gaegu:wght@700&family=Inter:wght@400;500&family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .album { height: 900px; }
+  .back-btn { left: 48px; top: 36px; width: 210px; height: 44px; border: 1.5px solid #3a2a20; border-radius: 22px; background: var(--paper); display: flex; align-items: center; justify-content: center; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 15px; color: #3a2a20; z-index: 60; }
+  .back-btn:hover { background: #3a2a20; color: var(--paper); }
+  .a-title { left: 0; width: 1440px; top: 24px; text-align: center; font-family: 'Gaegu', cursive; font-weight: 700; font-size: 60px; line-height: 72px; color: #3a2a20; }
+  .a-count { left: 0; width: 1440px; top: 104px; text-align: center; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 14px; color: #3a2a20; opacity: .6; letter-spacing: .02em; }
+  .stackp { position: absolute; width: 70px; border-radius: 6px; background: var(--paper); box-shadow: 0 4px 10px rgba(0,0,0,.1); }
+
+  .book { left: 280px; top: 170px; width: 880px; height: 600px; perspective: 2400px; cursor: pointer; }
+  .book .pg { position: absolute; top: 0; width: 440px; height: 600px; background-size: cover; background-position: center; }
+  .book .l { left: 0; border-radius: 10px 0 0 10px; }
+  .book .r { left: 440px; border-radius: 0 10px 10px 0; }
+  .book .shadow { position: absolute; inset: 0; border-radius: 10px; box-shadow: 0 14px 30px rgba(0,0,0,.22); pointer-events: none; }
+  .book .gutter { position: absolute; left: 400px; top: 0; width: 80px; height: 600px; pointer-events: none; z-index: 20;
+    background: linear-gradient(90deg, rgba(51,33,20,0) 0%, rgba(51,33,20,.22) 50%, rgba(51,33,20,0) 100%); }
+  .leaf { position: absolute; left: 440px; top: 0; width: 440px; height: 600px; transform-origin: 0 50%; transform-style: preserve-3d; z-index: 10; }
+  .leaf.turn { transition: transform .95s cubic-bezier(.55,.05,.35,1); transform: rotateY(-180deg); }
+  .leaf .side { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; background-size: cover; background-position: center; }
+  .leaf .front { border-radius: 0 10px 10px 0; }
+  .leaf .rear { transform: rotateY(180deg); border-radius: 10px 0 0 10px; }
+  .leaf .side::after { content: ''; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .95s cubic-bezier(.55,.05,.35,1); }
+  .leaf .front::after { background: linear-gradient(90deg, rgba(40,25,15,.35), rgba(40,25,15,.05)); }
+  .leaf .rear::after { background: linear-gradient(270deg, rgba(40,25,15,.35), rgba(40,25,15,.05)); opacity: .9; }
+  .leaf.turn .front::after { opacity: 1; }
+  .leaf.turn .rear::after { opacity: 0; }
+
+  .dots { left: 0; width: 1440px; top: 812px; display: flex; justify-content: center; gap: 14px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: #3a2a20; opacity: .25; transition: opacity .3s; }
+  .dots i.on { opacity: .9; }
+  .a-hint { left: 0; width: 1440px; top: 842px; text-align: center; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 12px; color: #3a2a20; opacity: .45; }
+
+  .lookbook { left: 0; top: 150px; width: 1440px; }
+  .soon { left: 420px; top: 260px; width: 600px; height: 380px; background: var(--paper); border-radius: 10px; box-shadow: 0 14px 30px rgba(0,0,0,.18); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transform: rotate(-1.5deg); }
+  .soon h2 { margin: 0; font-family: 'Nothing You Could Do', cursive; font-size: 40px; color: var(--red); }
+  .soon p { font-family: 'Courier Prime', monospace; font-weight: 700; letter-spacing: .1em; font-size: 14px; opacity: .6; }
+</style>
+</head>
+<body>
+<div class="stage"><div class="board album" id="board">
+  <a class="abs back-btn" href="hobbies.html">← BACK TO HOBBIES</a>
+  <div class="abs a-title" id="title"></div>
+  <div class="abs a-count" id="count"></div>
+  <div id="stage-inner"></div>
+</div></div>
+
+<script src="js/common.js"></script>
+<script>
+const ALBUMS = {
+  traveling: { title: 'Traveling', spreads: 10 },
+  hiking: { title: 'Hiking', spreads: 6 },
+  basketball: { title: 'Basketball', spreads: 4 },
+  photography: { title: 'Photography', spreads: 0 },
+  cinema: { title: 'Cinema', spreads: 0 },
+  fashion: { title: 'Fashion', lookbook: true },
+};
+const key = new URLSearchParams(location.search).get('a') || 'traveling';
+const A = ALBUMS[key] || ALBUMS.traveling;
+document.title = `${A.title} · Xiahan Yu`;
+document.getElementById('title').textContent = A.title;
+const inner = document.getElementById('stage-inner');
+const board = document.getElementById('board');
+const pad = n => String(n).padStart(2, '0');
+
+if (A.lookbook) {
+  document.getElementById('count').textContent = 'LOOKBOOK · 9 OUTFITS';
+  board.style.height = '1200px';
+  inner.innerHTML = `<img class="abs lookbook" src="assets/albums/fashion_lookbook.jpg" alt="Nine outfit photos clipped to paper sheets">`;
+} else if (!A.spreads) {
+  document.getElementById('count').textContent = 'PHOTO ALBUM';
+  inner.innerHTML = `<div class="abs soon"><h2>coming soon…</h2><p>PHOTOS ARE ON THEIR WAY</p></div>`;
+} else {
+  const N = A.spreads;
+  const img = (i, s) => `assets/albums/${key}_${i + 1}_${s}.jpg`;
+  // side stacks
+  let stacks = '';
+  for (const side of [-1, 1]) for (let k = 4; k >= 0; k--) {
+    const h = 560 - k * 34;
+    stacks += `<div class="stackp" style="left:${720 + side * (475 + k * 42) - 35}px;top:${175 + (590 - h) / 2}px;height:${h}px;opacity:${1 - k * .12}"></div>`;
+  }
+  inner.innerHTML = stacks + `
+    <div class="abs book" id="book">
+      <div class="shadow"></div>
+      <div class="pg l" id="pl"></div>
+      <div class="pg r" id="pr"></div>
+      <div class="gutter"></div>
+    </div>
+    <div class="abs dots" id="dots">${Array.from({ length: N }, () => '<i></i>').join('')}</div>
+    <div class="abs a-hint">AUTO-PLAYING · CLICK THE BOOK TO TURN · ← → KEYS</div>`;
+  // preload
+  for (let i = 0; i < N; i++) ['L', 'R'].forEach(s => { const im = new Image(); im.src = img(i, s); });
+
+  const book = document.getElementById('book'), pl = document.getElementById('pl'), pr = document.getElementById('pr');
+  let cur = 0, busy = false, timer;
+  const bg = (el, src) => el.style.backgroundImage = `url('${src}')`;
+  function show(i) {
+    bg(pl, img(i, 'L')); bg(pr, img(i, 'R'));
+    document.getElementById('count').textContent = `PHOTO ALBUM · ${pad(i + 1)} / ${pad(N)}`;
+    document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i));
+  }
+  function turn(dir = 1) {
+    if (busy) return; busy = true;
+    const next = (cur + dir + N) % N;
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf';
+    if (dir > 0) {
+      leaf.innerHTML = `<div class="side front" style="background-image:url('${img(cur, 'R')}')"></div><div class="side rear" style="background-image:url('${img(next, 'L')}')"></div>`;
+      bg(pr, img(next, 'R'));
+    } else {
+      // turning backwards: leaf starts on the left and swings right
+      leaf.style.transform = 'rotateY(-180deg)';
+      leaf.innerHTML = `<div class="side front" style="background-image:url('${img(next, 'R')}')"></div><div class="side rear" style="background-image:url('${img(cur, 'L')}')"></div>`;
+      bg(pl, img(next, 'L'));
+    }
+    book.insertBefore(leaf, book.querySelector('.gutter'));
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (dir > 0) leaf.classList.add('turn');
+      else { leaf.style.transition = 'transform .95s cubic-bezier(.55,.05,.35,1)'; leaf.style.transform = 'rotateY(0deg)'; }
+    }));
+    setTimeout(() => { cur = next; show(cur); leaf.remove(); busy = false; }, 980);
+  }
+  const restart = () => { clearInterval(timer); timer = setInterval(() => turn(1), 3600); };
+  book.addEventListener('click', () => { turn(1); restart(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { turn(1); restart(); }
+    if (e.key === 'ArrowLeft') { turn(-1); restart(); }
+  });
+  document.addEventListener('visibilitychange', () => document.hidden ? clearInterval(timer) : restart());
+  show(0); restart();
+}
+fitBoard();
+</script>
+</body>
+</html>

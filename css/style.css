@@ -1,0 +1,42 @@
+/* ---------- Base ---------- */
+:root {
+  --bg: #ede7dd;
+  --ink: #1a1a1a;
+  --brown: #4a2c1d;
+  --red: #991a1a;
+  --paper: #fbf8f2;
+  --cream: #faf3e6;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+body { overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+img { display: block; user-select: none; -webkit-user-drag: none; }
+
+/* Every page is a 1440px-wide artboard that js/common.js scales to the window. */
+.stage { position: relative; width: 100%; overflow: hidden; }
+.board { position: relative; width: 1440px; transform-origin: 0 0; margin: 0; }
+.abs { position: absolute; }
+
+/* ---------- Fonts ---------- */
+.f-marker { font-family: 'Permanent Marker', cursive; }
+.f-rainbow { font-family: 'Over the Rainbow', cursive; }
+.f-pen { font-family: 'Nothing You Could Do', cursive; }
+.f-script { font-family: 'Monsieur La Doulaise', cursive; }
+.f-type { font-family: 'Courier Prime', monospace; font-weight: 700; }
+.f-gaegu { font-family: 'Gaegu', cursive; font-weight: 700; }
+.f-serif-it { font-family: 'Instrument Serif', serif; font-style: italic; }
+.f-inter { font-family: 'Inter', sans-serif; }
+.f-crayon { font-family: 'Finger Paint', cursive; }
+.f-wenkai { font-family: 'LXGW WenKai TC', serif; }
+
+/* ---------- Nav ---------- */
+.nav { position: absolute; left: 0; top: 0; width: 1440px; height: 108px; z-index: 50; }
+.nav .logo { position: absolute; left: 80px; top: 32px; font-family: 'Finger Paint', cursive; font-size: 30px; line-height: 44px; color: var(--brown); }
+.nav .links { position: absolute; top: 45px; left: 994px; display: flex; gap: 40px; }
+.nav .links a { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 16px; line-height: 19px; position: relative; }
+.nav .links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; background: var(--brown); transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
+.nav .links a:hover::after, .nav .links a.active::after { transform: scaleX(1); }
+
+/* Pen text: the Figma design thickens these strokes with a thin outline */
+.pen-thick { -webkit-text-stroke: 0.9px currentColor; }

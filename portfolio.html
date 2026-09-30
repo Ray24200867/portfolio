@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio · Xiahan Yu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Finger+Paint&family=Instrument+Serif:ital@1&family=Inter:wght@400;500&family=Noto+Sans+TC:wght@400&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .flow { padding: 358px 60px 60px; position: relative; z-index: 2; }
+  .h-title { left: 44px; top: 138px; font-size: 84px; line-height: 84px; color: #1f1f1f; }
+  .h-sub { left: 48px; top: 228px; font-size: 14px; letter-spacing: .2em; }
+  .h-right { right: 48px; top: 136px; font-size: 22px; line-height: 26px; letter-spacing: .08em; text-align: right; }
+
+  /* Folder */
+  .pf { position: relative; z-index: 1; width: 1320px; height: 311.67px; cursor: pointer; transition: height .55s cubic-bezier(.4,0,.2,1); }
+  .pf + .pf { margin-top: -48.58px; }
+  .pf .back { position: absolute; left: 0; top: 0; width: 1320px; height: 311.67px; }
+  .pf .paper { position: absolute; left: 0; right: 0; top: 93.5px; bottom: 0; background: var(--paper); border-radius: 13px 13px 0 0; }
+  .pf .ttl { position: absolute; top: 14.67px; font-size: 27.5px; line-height: 30px; letter-spacing: .06em; white-space: pre; z-index: 6; }
+  .pf .front { position: absolute; left: 0; bottom: 0; width: 1320px; height: 194.33px; z-index: 4; }
+  .pf .front > img.shape { width: 100%; height: 100%; filter: drop-shadow(0 -3px 11px rgba(0,0,0,.13)); }
+  .pf .hint { position: absolute; top: 23.8px; font-size: 12.8px; letter-spacing: .1em; }
+  .pf .deco { position: absolute; transform-origin: 0 0; }
+  .pf .slot { border: 7.3px solid #fff; border-radius: 3px; background-size: cover; background-position: center; box-shadow: 0 5.5px 13px rgba(0,0,0,.18); }
+  .pf .content { position: absolute; left: 88px; right: 88px; top: 137.5px; opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+  .pf.open .content { opacity: 1; pointer-events: auto; transition-delay: .15s; }
+
+  .row { display: flex; gap: 36.7px; padding: 25.7px 0; border-bottom: 1.4px solid rgba(74,44,29,.25); cursor: default; }
+  .row .cv { width: 367px; height: 206px; flex: none; border-radius: 5.5px; border: 5.5px solid #fff; background-size: cover; background-position: center; box-shadow: 0 3.7px 11px rgba(0,0,0,.12); }
+  .row .tx { flex: 1; display: flex; flex-direction: column; min-height: 206px; }
+  .row h3 { margin: 0 0 12.8px; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 22px; line-height: 1.2; color: var(--brown); text-decoration: underline; letter-spacing: .02em; }
+  .row p { margin: 0; font-family: 'Inter', sans-serif; font-size: 13.75px; line-height: 1.55; color: rgba(26,26,26,.8); }
+  .row.zh h3 { font-family: 'Noto Serif TC', serif; font-size: 19.25px; letter-spacing: 0; }
+  .row.zh p { font-family: 'Noto Sans TC', sans-serif; font-size: 12.8px; line-height: 1.7; }
+  .row .meta { margin-top: auto; display: flex; align-items: center; gap: 14.7px; }
+  .row .tag { font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 12px; letter-spacing: .08em; color: var(--cream); background: var(--brown); padding: 5.5px 11px; border-radius: 3.7px; }
+  .row .date { font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 12.8px; letter-spacing: .08em; color: rgba(26,26,26,.5); }
+  .row .go { margin-left: auto; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 12px; letter-spacing: .1em; color: var(--brown); background: var(--cream); border: 1.4px solid var(--brown); border-radius: 999px; padding: 9px 16.5px; transition: background .2s, color .2s; }
+  .row .go:hover { background: var(--brown); color: var(--cream); }
+
+  .footer { position: relative; width: 1320px; height: 220px; background: #4a3830; border-radius: 0 0 24px 24px; z-index: 5; }
+  .footer .q { position: absolute; left: 48px; top: 110px; width: 760px; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 20px; line-height: 1.35; color: var(--cream); }
+  .footer .s { position: absolute; right: 48px; top: 114px; font-size: 22px; letter-spacing: .08em; color: var(--cream); }
+</style>
+</head>
+<body>
+<div class="stage"><div class="board">
+  <div id="nav"></div>
+  <div class="abs h-title f-serif-it">Portfolio</div>
+  <div class="abs h-sub f-type">C L A S S I F I C A T I O N</div>
+  <div class="abs h-right f-type">XIAHAN<br>YU</div>
+  <img class="abs" src="assets/portfolio/Top_Note.png" style="left:470px;top:98.8px;width:447.3px;height:299.3px;z-index:1" alt="Note: News carries no weapon, yet its power knows no bounds.">
+  <img class="abs" src="assets/portfolio/Top_Photo_2_Mexico_City.png" style="left:1074.5px;top:96px;width:359.7px;height:317px;z-index:1" alt="Filming at Estadio Azteca, Mexico City">
+  <img class="abs" src="assets/portfolio/Top_Photo_1_Duo.png" style="left:850px;top:118.6px;width:320.2px;height:239.2px;z-index:1" alt="Two journalists with cameras">
+
+  <div class="flow">
+    <div id="stack"></div>
+    <div class="footer">
+      <div class="q">"Through images, video, data and audio, I use multimedia storytelling to make complex issues clearer and more grounded in the scene."</div>
+      <div class="s f-type">XIAHAN YU · PORTFOLIO</div>
+    </div>
+  </div>
+</div></div>
+
+<script src="js/common.js"></script>
+<script src="js/portfolio-data.js"></script>
+<script>
+document.getElementById('nav').outerHTML = renderNav('Portfolio');
+const FRONT_Y = 117.33, CLOSED = 311.67;
+const stack = document.getElementById('stack');
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+PORTFOLIO.forEach(f => {
+  const n = String(f.cards.length).padStart(2, '0');
+  const right = f.tab === 'right';
+  const deco = f.deco.map(d => {
+    const style = `left:${d.x}px;top:${d.y - FRONT_Y}px;width:${d.w}px;height:${d.h}px;transform:rotate(${-d.rot}deg)`;
+    return d.type === 'slot'
+      ? `<div class="deco slot" style="${style};background-image:url('${d.src}')"></div>`
+      : `<img class="deco" src="${d.src}" style="${style}" alt="">`;
+  }).join('');
+  const rows = f.cards.map(c => `
+    <div class="row${c.zh ? ' zh' : ''}">
+      <div class="cv" style="background-image:url('assets/covers/${c.cover}')"></div>
+      <div class="tx">
+        <h3>${esc(c.title)}</h3>
+        <p>${esc(c.blurb)}</p>
+        <div class="meta"><span class="tag">${c.tag}</span><span class="date">${c.date}</span>
+          <a class="go" href="${c.url}" target="_blank" rel="noopener">${c.link}</a></div>
+      </div>
+    </div>`).join('');
+  const el = document.createElement('section');
+  el.className = 'pf'; el.id = f.id;
+  el.innerHTML = `
+    <img class="back" src="assets/portfolio/pf_${f.id}_back.png" alt="">
+    <div class="ttl f-type" style="${right ? 'right:40.33px;text-align:right' : 'left:40.33px'};color:${f.text}">${f.title}\n(${n})</div>
+    <div class="paper"></div>
+    <div class="content">${rows}</div>
+    <div class="front">
+      <img class="shape" src="assets/portfolio/pf_${f.id}_front.png" alt="">
+      <div class="hint f-type" style="${right ? 'left:44px' : 'right:44px'};color:${f.text}">+ CLICK TO OPEN</div>
+      ${deco}
+    </div>`;
+  el.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    const open = !el.classList.contains('open');
+    el.classList.toggle('open', open);
+    const content = el.querySelector('.content');
+    el.style.height = open ? (CLOSED + content.offsetHeight + 24) + 'px' : CLOSED + 'px';
+    el.querySelector('.hint').textContent = open ? '– CLICK TO CLOSE' : '+ CLICK TO OPEN';
+  });
+  stack.appendChild(el);
+});
+// portfolio.html#video opens that folder on load
+const target = location.hash && document.getElementById(location.hash.slice(1));
+if (target && target.classList.contains('pf')) setTimeout(() => { target.click(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 400);
+</script>
+</body>
+</html>
