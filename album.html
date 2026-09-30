@@ -9,11 +9,22 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   .album { height: 900px; }
-  .back-btn { left: 48px; top: 36px; width: 210px; height: 44px; border: 1.5px solid #3a2a20; border-radius: 22px; background: var(--paper); display: flex; align-items: center; justify-content: center; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 15px; color: #3a2a20; z-index: 60; }
-  .back-btn:hover { background: #3a2a20; color: var(--paper); }
+  /* Back button drawn like a pencil sketch: wobbly double outline + handwritten label */
+  .back-btn { left: 44px; top: 30px; width: 150px; height: 58px; display: flex; align-items: center; justify-content: center; z-index: 60; color: #3a2a20; transition: transform .25s ease; }
+  .back-btn svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .back-btn svg path { fill: none; stroke: #3a2a20; stroke-linecap: round; stroke-linejoin: round; }
+  .back-btn .fill { fill: rgba(251,248,242,.85); stroke: none; }
+  .back-btn span { position: relative; font-family: 'Nothing You Could Do', cursive; font-size: 26px; line-height: 1; -webkit-text-stroke: .8px currentColor; transform: rotate(-2deg); }
+  .back-btn:hover { transform: rotate(-3deg) scale(1.04); }
+  .back-btn:hover .scribble { stroke-dashoffset: 0; }
+  .back-btn .scribble { stroke-dasharray: 120; stroke-dashoffset: 120; transition: stroke-dashoffset .4s ease; opacity: .55; }
   .a-title { left: 0; width: 1440px; top: 24px; text-align: center; font-family: 'Gaegu', cursive; font-weight: 700; font-size: 60px; line-height: 72px; color: #3a2a20; }
   .a-count { left: 0; width: 1440px; top: 104px; text-align: center; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 14px; color: #3a2a20; opacity: .6; letter-spacing: .02em; }
-  .stackp { position: absolute; width: 70px; border-radius: 6px; background: var(--paper); box-shadow: 0 4px 10px rgba(0,0,0,.1); }
+  .stackp { position: absolute; width: 70px; border-radius: 6px; background: var(--paper); box-shadow: 0 4px 10px rgba(0,0,0,.1);
+    opacity: 0; transform: scaleX(.2); transition: opacity .95s cubic-bezier(.55,.05,.35,1), transform .95s cubic-bezier(.55,.05,.35,1); }
+  .stackp.l { transform-origin: 100% 50%; }
+  .stackp.r { transform-origin: 0 50%; }
+  .stackp.on { transform: none; }
 
   .book { left: 280px; top: 170px; width: 880px; height: 600px; perspective: 2400px; cursor: pointer; }
   .book .pg { position: absolute; top: 0; width: 440px; height: 600px; background-size: cover; background-position: center; }
@@ -46,7 +57,15 @@
 </head>
 <body>
 <div class="stage"><div class="board album" id="board">
-  <a class="abs back-btn" href="hobbies.html">← BACK TO HOBBIES</a>
+  <a class="abs back-btn" href="hobbies.html" aria-label="Back to hobbies">
+    <svg viewBox="0 0 150 58" aria-hidden="true">
+      <path class="fill" d="M 26 6 C 60 3 100 4 124 7 C 146 10 148 48 124 51 C 92 55 52 54 26 51 C 4 48 3 10 26 6 Z"/>
+      <path stroke-width="1.8" d="M 24 7 C 58 3 102 3 125 6 C 147 9 149 47 126 51 C 94 56 50 55 25 52 C 3 49 2 11 27 6"/>
+      <path stroke-width=".9" opacity=".7" d="M 29 4 C 64 2 99 5 122 9 C 144 13 145 45 121 49 C 90 53 55 53 28 50 C 6 46 7 13 31 8"/>
+      <path class="scribble" stroke-width="1.3" d="M 40 44 C 60 47 90 46 112 43"/>
+    </svg>
+    <span>← Back</span>
+  </a>
   <div class="abs a-title" id="title"></div>
   <div class="abs a-count" id="count"></div>
   <div id="stage-inner"></div>
@@ -80,13 +99,13 @@ if (A.lookbook) {
 } else {
   const N = A.spreads;
   const img = (i, s) => `assets/albums/${key}_${i + 1}_${s}.jpg`;
-  // side stacks
-  let stacks = '';
+  // side stacks: left = pages already turned, right = pages still to come (max 5 sheets each side)
+  let stackHtml = '';
   for (const side of [-1, 1]) for (let k = 4; k >= 0; k--) {
     const h = 560 - k * 34;
-    stacks += `<div class="stackp" style="left:${720 + side * (475 + k * 42) - 35}px;top:${175 + (590 - h) / 2}px;height:${h}px;opacity:${1 - k * .12}"></div>`;
+    stackHtml += `<div class="stackp ${side < 0 ? 'l' : 'r'}" data-k="${k}" style="left:${720 + side * (475 + k * 42) - 35}px;top:${175 + (590 - h) / 2}px;height:${h}px" data-op="${1 - k * .12}"></div>`;
   }
-  inner.innerHTML = stacks + `
+  inner.innerHTML = stackHtml + `
     <div class="abs book" id="book">
       <div class="shadow"></div>
       <div class="pg l" id="pl"></div>
@@ -105,6 +124,16 @@ if (A.lookbook) {
     bg(pl, img(i, 'L')); bg(pr, img(i, 'R'));
     document.getElementById('count').textContent = `PHOTO ALBUM · ${pad(i + 1)} / ${pad(N)}`;
     document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i));
+    stacks(i);
+  }
+  // Stacks change while the page turns, so the sheet lands on the left as the leaf does
+  function stacks(i) {
+    const left = Math.min(i, 5), right = Math.min(N - 1 - i, 5);
+    document.querySelectorAll('.stackp').forEach(p => {
+      const k = +p.dataset.k, on = p.classList.contains('l') ? k < left : k < right;
+      p.classList.toggle('on', on);
+      p.style.opacity = on ? p.dataset.op : 0;
+    });
   }
   function turn(dir = 1) {
     if (busy) return; busy = true;
@@ -121,6 +150,7 @@ if (A.lookbook) {
       bg(pl, img(next, 'L'));
     }
     book.insertBefore(leaf, book.querySelector('.gutter'));
+    stacks(next);
     requestAnimationFrame(() => requestAnimationFrame(() => {
       if (dir > 0) leaf.classList.add('turn');
       else { leaf.style.transition = 'transform .95s cubic-bezier(.55,.05,.35,1)'; leaf.style.transform = 'rotateY(0deg)'; }
@@ -134,7 +164,8 @@ if (A.lookbook) {
     if (e.key === 'ArrowLeft') { turn(-1); restart(); }
   });
   document.addEventListener('visibilitychange', () => document.hidden ? clearInterval(timer) : restart());
-  show(0); restart();
+  cur = Math.max(0, Math.min(N - 1, (+new URLSearchParams(location.search).get('p') || 1) - 1));
+  show(cur); restart();
 }
 fitBoard();
 </script>

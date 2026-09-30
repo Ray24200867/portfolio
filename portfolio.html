@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Portfolio · Xiahan Yu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Finger+Paint&family=Instrument+Serif:ital@1&family=Inter:wght@400;500&family=Noto+Sans+TC:wght@400&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Finger+Paint&family=Instrument+Serif:ital@1&family=Inter:wght@400;500&family=Noto+Sans+TC:wght@400&family=Noto+Serif+TC:wght@700&family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
   .flow { padding: 358px 60px 60px; position: relative; z-index: 2; }
@@ -92,7 +92,8 @@ PORTFOLIO.forEach(f => {
       </div>
     </div>`).join('');
   const el = document.createElement('section');
-  el.className = 'pf'; el.id = f.id;
+  el.className = 'pf reveal'; el.id = f.id;
+  el.style.transitionDelay = `0s, ${PORTFOLIO.indexOf(f) * 0.08}s, ${PORTFOLIO.indexOf(f) * 0.08}s`;
   el.innerHTML = `
     <img class="back" src="assets/portfolio/pf_${f.id}_back.png" alt="">
     <div class="ttl f-type" style="${right ? 'right:40.33px;text-align:right' : 'left:40.33px'};color:${f.text}">${f.title}\n(${n})</div>

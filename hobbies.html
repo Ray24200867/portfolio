@@ -5,11 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Hobbies · Xiahan Yu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Finger+Paint&family=Gaegu:wght@700&family=Inter:wght@400;500&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Finger+Paint&family=Gaegu:wght@700&family=Inter:wght@400;500&family=LXGW+WenKai+TC&family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
   .home { height: 1311px; }
-  .lady { left: 1225px; top: -8px; width: 96.3px; height: 426.2px; transform-origin: 0 0; transform: rotate(5deg); }
+  /* Pencil lady hangs from her bag handle: drops in, swings, then keeps a gentle sway */
+  .lady { left: 1206px; top: -6px; width: 96.3px; height: 426.2px; transform-origin: 50% 3%; transform: rotate(5deg);
+    animation: lady-drop 1.9s cubic-bezier(.3,.7,.3,1) both, lady-idle 4.5s ease-in-out 2.1s infinite; cursor: grab; }
+  .lady:hover { animation: lady-wiggle .9s ease-in-out; }
+  @keyframes lady-drop {
+    0%   { transform: translateY(-460px) rotate(5deg); }
+    30%  { transform: translateY(14px) rotate(-9deg); }
+    45%  { transform: translateY(-4px) rotate(14deg); }
+    60%  { transform: translateY(0) rotate(0deg); }
+    74%  { transform: rotate(8.5deg); }
+    87%  { transform: rotate(3.5deg); }
+    100% { transform: rotate(5deg); }
+  }
+  @keyframes lady-idle { 0%, 100% { transform: rotate(5deg); } 50% { transform: rotate(2deg); } }
+  @keyframes lady-wiggle { 0%, 100% { transform: rotate(5deg); } 25% { transform: rotate(-4deg); } 50% { transform: rotate(10deg); } 75% { transform: rotate(2deg); } }
+  @media (prefers-reduced-motion: reduce) { .lady, .lady:hover { animation: none; } }
   .hero-title { left: 0; width: 1440px; top: 188px; text-align: center; font-size: 70px; line-height: 103px; color: var(--brown); }
   .hero-sub { left: 0; width: 1440px; top: 307px; text-align: center; color: #5c544f; line-height: 1.75; }
   .hero-sub .zh { font-family: 'LXGW WenKai TC', serif; font-size: 24px; display: block; }
@@ -43,7 +58,8 @@ const grid = document.getElementById('grid');
 const tf = ([x, y, r]) => `translate(${x}px, ${y}px) rotate(${-r}deg)`;
 HOBBY_FOLDERS.forEach((f, i) => {
   const a = document.createElement('a');
-  a.className = 'folder'; a.href = `album.html?a=${f.id}`;
+  a.className = 'folder reveal'; a.href = `album.html?a=${f.id}`;
+  a.style.transitionDelay = `${(i % 3) * 0.1 + Math.floor(i / 3) * 0.12}s`;
   a.style.left = (i % 3) * 400 + 'px'; a.style.top = Math.floor(i / 3) * 396 + 'px';
   a.setAttribute('aria-label', `Open the ${f.label} album`);
   let html = '';
