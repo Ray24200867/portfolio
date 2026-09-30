@@ -61,27 +61,47 @@ document.addEventListener('DOMContentLoaded', () => {
   setupCursor();
 });
 
-// Keep scrolling at the bottom of a page → go to the next page in PAGE_ORDER
+// Keep scrolling past the bottom → next page in PAGE_ORDER; past the top → previous page.
+// Arriving from below ("up") lands at the bottom of the previous page, like scrolling back.
+const ARRIVED = navDir();
 function setupNextPage() {
   const i = PAGE_ORDER.findIndex(p => p.file === currentFile());
-  if (i < 0 || i === PAGE_ORDER.length - 1) return;
-  const next = PAGE_ORDER[i + 1];
-  // A small amount of extra scrolling past the bottom is needed, so one accidental tick doesn't leave the page
-  const NEED = 240; let acc = 0, gone = false, lastT = 0, touchY = null;
+  if (i < 0) return;
+  const next = PAGE_ORDER[i + 1], prev = PAGE_ORDER[i - 1];
+  if (ARRIVED === 'up') {
+    const toBottom = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
+    toBottom(); requestAnimationFrame(toBottom); window.addEventListener('load', toBottom, { once: true });
+  }
+  // A small amount of extra scrolling past the edge is needed, so one accidental tick doesn't leave the page
+  const NEED = 240; let down = 0, up = 0, gone = false, lastT = 0, touchY = null;
   const atBottom = () => window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
-  const push = amount => {
-    if (gone) return;
-    if (!atBottom()) { acc = 0; return; }
-    acc += amount; lastT = performance.now();
-    if (acc >= NEED) { gone = true; goTo(next.file, 'down'); }
+  const atTop = () => window.scrollY <= 2;
+  const readyAt = performance.now() + 900; // ignore leftover trackpad momentum right after arriving
+  const push = amount => {   // amount > 0 = scrolling down, < 0 = scrolling up
+    if (gone || performance.now() < readyAt) return;
+    lastT = performance.now();
+    if (amount > 0) {
+      up = 0;
+      if (!next || !atBottom()) { down = 0; return; }
+      down += amount;
+      if (down >= NEED) { gone = true; goTo(next.file, 'down'); }
+    } else {
+      down = 0;
+      if (!prev || !atTop()) { up = 0; return; }
+      up -= amount;
+      if (up >= NEED) { gone = true; goTo(prev.file, 'up'); }
+    }
   };
-  window.addEventListener('wheel', e => { if (e.deltaY > 0) push(Math.min(e.deltaY, 120)); else acc = 0; }, { passive: true });
+  window.addEventListener('wheel', e => push(Math.max(-120, Math.min(e.deltaY, 120))), { passive: true });
   window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
-  window.addEventListener('touchmove', e => { if (touchY == null) return; const dy = touchY - e.touches[0].clientY; touchY = e.touches[0].clientY; if (dy > 0) push(dy * 2.2); }, { passive: true });
+  window.addEventListener('touchmove', e => { if (touchY == null) return; const dy = touchY - e.touches[0].clientY; touchY = e.touches[0].clientY; if (dy) push(dy * 2.2); }, { passive: true });
   window.addEventListener('touchend', () => { touchY = null; });
-  window.addEventListener('keydown', e => { if (['ArrowDown', 'PageDown', ' '].includes(e.key) && atBottom()) push(180); });
-  // let the ring drain if the visitor stops scrolling
-  setInterval(() => { if (!gone && acc > 0 && performance.now() - lastT > 350) { acc = Math.max(0, acc - 40); } }, 60);
+  window.addEventListener('keydown', e => {
+    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) push(180);
+    if (['ArrowUp', 'PageUp'].includes(e.key)) push(-180);
+  });
+  // the build-up drains if the visitor stops scrolling
+  setInterval(() => { if (!gone && performance.now() - lastT > 350) { down = Math.max(0, down - 40); up = Math.max(0, up - 40); } }, 60);
 }
 
 // Elements with .reveal fade/slide in when they enter the viewport

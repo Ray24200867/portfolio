@@ -44,6 +44,11 @@ img { display: block; user-select: none; -webkit-user-drag: none; }
 /* scrolled into the next page: old page slides up, new page follows from below */
 html:active-view-transition-type(down)::view-transition-old(root) { animation: vt-up-out .6s cubic-bezier(.65,0,.25,1) both; }
 html:active-view-transition-type(down)::view-transition-new(root) { animation: vt-up-in .6s cubic-bezier(.65,0,.25,1) both; }
+/* scrolled back to the previous page: the reverse — old page slides down, previous page comes from above */
+html:active-view-transition-type(up)::view-transition-old(root) { animation: vt-down-out .6s cubic-bezier(.65,0,.25,1) both; }
+html:active-view-transition-type(up)::view-transition-new(root) { animation: vt-down-in .6s cubic-bezier(.65,0,.25,1) both; }
+@keyframes vt-down-out { to { transform: translateY(100%); } }
+@keyframes vt-down-in { from { transform: translateY(-100%); } }
 @keyframes vt-up-out { to { transform: translateY(-100%); } }
 @keyframes vt-up-in { from { transform: translateY(100%); } }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
