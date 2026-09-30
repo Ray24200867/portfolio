@@ -113,7 +113,7 @@ if (A.lookbook) {
       <div class="gutter"></div>
     </div>
     <div class="abs dots" id="dots">${Array.from({ length: N }, () => '<i></i>').join('')}</div>
-    <div class="abs a-hint">AUTO-PLAYING · CLICK THE BOOK TO TURN · ← → KEYS</div>`;
+    <div class="abs a-hint">AUTO-PLAYING · CLICK A PAGE TO TURN · ← → KEYS</div>`;
   // preload
   for (let i = 0; i < N; i++) ['L', 'R'].forEach(s => { const im = new Image(); im.src = img(i, s); });
 
@@ -158,10 +158,20 @@ if (A.lookbook) {
     setTimeout(() => { cur = next; show(cur); leaf.remove(); busy = false; }, 980);
   }
   const restart = () => { clearInterval(timer); timer = setInterval(() => turn(1), 3600); };
-  book.addEventListener('click', () => { turn(1); restart(); });
+  // Click the right page to turn forward (leaf flips to the left), the left page to turn back
+  book.addEventListener('click', e => {
+    const r = book.getBoundingClientRect();
+    const dir = e.clientX >= r.left + r.width / 2 ? 1 : -1;
+    if (dir < 0 && cur === 0) return;
+    turn(dir); restart();
+  });
+  book.addEventListener('mousemove', e => {
+    const r = book.getBoundingClientRect();
+    book.style.cursor = e.clientX < r.left + r.width / 2 && cur === 0 ? 'default' : 'pointer';
+  });
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') { turn(1); restart(); }
-    if (e.key === 'ArrowLeft') { turn(-1); restart(); }
+    if (e.key === 'ArrowLeft' && cur > 0) { turn(-1); restart(); }
   });
   document.addEventListener('visibilitychange', () => document.hidden ? clearInterval(timer) : restart());
   cur = Math.max(0, Math.min(N - 1, (+new URLSearchParams(location.search).get('p') || 1) - 1));

@@ -33,49 +33,28 @@ function currentFile() {
   const f = location.pathname.split('/').pop();
   return f === '' ? 'index.html' : f;
 }
-function labelFor(href) {
-  const f = href.split('/').pop().split(/[?#]/)[0] || 'index.html';
-  const p = PAGE_ORDER.find(x => x.file === f);
-  if (p) return p.label;
-  const a = new URLSearchParams(href.split('?')[1] || '').get('a');
-  return a ? a[0].toUpperCase() + a.slice(1) : '';
-}
-
-// Curtain page transitions
-let curtain;
-function goTo(href) {
-  if (reduceMotion) { location.href = href; return; }
-  curtain.querySelector('span').textContent = labelFor(href);
-  curtain.classList.remove('lift', 'instant');
-  requestAnimationFrame(() => curtain.classList.add('cover'));
-  try { sessionStorage.setItem('curtain', labelFor(href)); } catch (e) {}
-  setTimeout(() => { location.href = href; }, 470);
+// Page transitions use the browser's cross-document View Transitions (see style.css), so there is
+// no blank frame between pages. Scrolling into the next page marks the transition as "down" so the
+// old page slides up and the new one follows from below; links get a soft crossfade.
+function goTo(href, dir) {
+  try { dir ? sessionStorage.setItem('navDir', dir) : sessionStorage.removeItem('navDir'); } catch (e) {}
+  location.href = href;
 }
 window.goTo = goTo;
+function navDir() { try { return sessionStorage.getItem('navDir'); } catch (e) { return null; } }
+window.addEventListener('pageswap', e => { if (e.viewTransition && navDir()) e.viewTransition.types.add(navDir()); });
+window.addEventListener('pagereveal', e => {
+  const d = navDir();
+  if (e.viewTransition && d) e.viewTransition.types.add(d);
+  try { sessionStorage.removeItem('navDir'); } catch (err) {}
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-  curtain = document.createElement('div');
-  curtain.className = 'curtain';
-  curtain.innerHTML = '<span hidden></span>';
-  document.body.appendChild(curtain);
-  let arrived = null; try { arrived = sessionStorage.getItem('curtain'); sessionStorage.removeItem('curtain'); } catch (e) {}
-  if (arrived && !reduceMotion) {
-    curtain.querySelector('span').textContent = arrived;
-    curtain.classList.add('instant', 'cover');
-    requestAnimationFrame(() => requestAnimationFrame(() => { curtain.classList.remove('instant'); curtain.classList.add('lift'); curtain.classList.remove('cover'); }));
-  }
-  // Coming back with the browser Back button: make sure the curtain is not left covering the page
-  window.addEventListener('pageshow', e => { if (e.persisted) curtain.className = 'curtain'; });
-
-  // Intercept internal page links
+  // Clearing the direction for normal link clicks
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href]');
-    if (!a || a.target === '_blank' || a.hasAttribute('download') || e.metaKey || e.ctrlKey || e.shiftKey) return;
-    const href = a.getAttribute('href');
-    if (!/\.html(\?|#|$)/.test(href) || /^https?:/.test(href)) return;
-    e.preventDefault();
-    goTo(href);
-  });
+    if (a && !a.target) try { sessionStorage.removeItem('navDir'); } catch (err) {}
+  }, true);
 
   setupNextPage();
   setupReveal();
@@ -94,7 +73,7 @@ function setupNextPage() {
     if (gone) return;
     if (!atBottom()) { acc = 0; return; }
     acc += amount; lastT = performance.now();
-    if (acc >= NEED) { gone = true; goTo(next.file); }
+    if (acc >= NEED) { gone = true; goTo(next.file, 'down'); }
   };
   window.addEventListener('wheel', e => { if (e.deltaY > 0) push(Math.min(e.deltaY, 120)); else acc = 0; }, { passive: true });
   window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
