@@ -58,8 +58,11 @@
   .copy { animation: write 1s ease-out var(--d, 1s) both; }
   @keyframes write { from { clip-path: inset(-20px 100% -20px -10px); } to { clip-path: inset(-20px -40px -20px -10px); } }
 
-  .lines path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .7s ease-in-out var(--d) forwards; }
-  @keyframes draw { to { stroke-dashoffset: 0; } }
+  /* Whole lines are drawn above the badge (covering the part printed on the badge image), so each one
+     reads as a single line. They only show while the badge is still and front-facing. */
+  .lines { z-index: 7; opacity: 0; transition: opacity .35s ease; }
+  .lines.show { opacity: 1; }
+  .pin { z-index: 8; }
 
   .pin { animation: pin-in .6s cubic-bezier(.3,1.6,.5,1) var(--d) both; transition: rotate .2s; pointer-events: auto; }
   .pin:hover { animation: pin-wiggle .5s ease-in-out; }
@@ -86,13 +89,13 @@
 
   <img class="abs note" src="assets/about/whatido_note.png" style="left:25.6px;top:703px;width:546.6px;height:285px" alt="">
 
-  <svg class="abs lines" viewBox="0 0 1440 1075">
-    <g stroke="#1a1a1a" stroke-width="1.1" fill="none">
-      <path pathLength="1" style="--d:1.35s" transform="translate(378.4 422.7)" d="M 0 0 L 137.6 271"/>
-      <path pathLength="1" style="--d:1.45s" transform="translate(341.3 593.7)" d="M 0 0 L 157 140.4"/>
-      <path pathLength="1" style="--d:1.55s" transform="translate(407.2 743.7)" d="M 0 107.7 L 49.9 58.6 L 109.5 0"/>
-      <path pathLength="1" style="--d:1.4s" transform="translate(698.8 381)" d="M 386.7 0 L 0 294.3"/>
-      <path pathLength="1" style="--d:1.5s" transform="translate(721 693)" d="M 318.4 139.8 L 0 0"/>
+  <svg class="abs lines" id="lines" viewBox="0 0 1440 1075" style="left:0;top:0;width:1440px;height:1075px">
+    <g stroke="#1a1a1a" stroke-width="1.15" fill="none" stroke-linecap="round">
+      <path d="M 378.4 422.7 L 516.1 693.7"/>
+      <path d="M 341.3 593.7 L 498.3 734.1"/>
+      <path d="M 407.2 851.4 L 516.7 743.7"/>
+      <path d="M 1085.5 381 L 698.8 675.3"/>
+      <path d="M 1039.4 832.8 L 721 693"/>
     </g>
   </svg>
 
@@ -165,10 +168,17 @@ document.querySelectorAll('.copy').forEach((el, i) => el.style.setProperty('--d'
 document.querySelectorAll('.pin').forEach((el, i) => el.style.setProperty('--d', (1.9 + i * 0.1) + 's'));
 // the badge swings a little once it has dropped onto its clip
 setTimeout(() => document.getElementById('swing').classList.add('go'), 1150);
+// lines appear once the badge has landed and stopped swinging
+const lines = document.getElementById('lines');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let linesTimer = setTimeout(() => lines.classList.add('show'), reduce ? 0 : 2450);
 const badge = document.getElementById('badge'), swing = document.getElementById('swing'), hint = document.getElementById('hintText');
 badge.addEventListener('click', () => {
   badge.classList.toggle('flipped');
   hint.textContent = badge.classList.contains('flipped') ? 'click again to flip back' : 'click the badge to flip it';
+  // hide the lines while the badge turns and swings; bring them back once the front is still again
+  lines.classList.remove('show'); clearTimeout(linesTimer);
+  if (!badge.classList.contains('flipped')) linesTimer = setTimeout(() => lines.classList.add('show'), 1900);
   swing.classList.remove('go'); void swing.offsetWidth;
   setTimeout(() => swing.classList.add('go'), 520);
 });
