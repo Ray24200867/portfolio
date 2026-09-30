@@ -97,14 +97,16 @@ function setupReveal() {
 // Small ring cursor that grows over clickable things
 function setupCursor() {
   if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  const c = document.createElement('div'); c.className = 'cursor'; document.body.appendChild(c);
-  let x = -100, y = -100, cx = x, cy = y;
-  document.addEventListener('mousemove', e => { x = e.clientX; y = e.clientY; c.classList.add('on');
-    c.classList.toggle('big', !!e.target.closest('a, button, [role="button"], .pf, .book, .folder')); });
+  const c = document.createElement('div'); c.className = 'cursor'; c.innerHTML = '<div class="s"></div>';
+  document.body.appendChild(c);
+  document.documentElement.classList.add('star-cursor');
+  document.addEventListener('mousemove', e => {
+    c.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; c.classList.add('on');
+    c.classList.toggle('big', !!e.target.closest('a, button, [role="button"], .pf, .book, .folder'));
+  });
   document.addEventListener('mouseleave', () => c.classList.remove('on'));
   document.addEventListener('mousedown', () => c.classList.add('down'));
   document.addEventListener('mouseup', () => c.classList.remove('down'));
-  (function loop() { cx += (x - cx) * .25; cy += (y - cy) * .25; c.style.transform = `translate(${cx}px, ${cy}px)`; requestAnimationFrame(loop); })();
 }
 
 // Shared nav markup
