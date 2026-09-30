@@ -50,6 +50,11 @@
   .a-hint { left: 0; width: 1440px; top: 842px; text-align: center; font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 12px; color: #3a2a20; opacity: .45; }
 
   .lookbook { left: 0; top: 150px; width: 1440px; }
+  .updating { left: 0; width: 1440px; top: 1205px; text-align: center; font-family: 'Nothing You Could Do', cursive; font-size: 30px; color: var(--brown); -webkit-text-stroke: .7px currentColor; }
+  .updating span { display: inline-block; animation: dot 1.4s ease-in-out infinite; }
+  .updating span:nth-child(2) { animation-delay: .2s; }
+  .updating span:nth-child(3) { animation-delay: .4s; }
+  @keyframes dot { 0%, 60%, 100% { transform: translateY(0); opacity: .35; } 30% { transform: translateY(-8px); opacity: 1; } }
   .soon { left: 420px; top: 260px; width: 600px; height: 380px; background: var(--paper); border-radius: 10px; box-shadow: 0 14px 30px rgba(0,0,0,.18); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transform: rotate(-1.5deg); }
   .soon h2 { margin: 0; font-family: 'Nothing You Could Do', cursive; font-size: 40px; color: var(--red); }
   .soon p { font-family: 'Courier Prime', monospace; font-weight: 700; letter-spacing: .1em; font-size: 14px; opacity: .6; }
@@ -91,8 +96,9 @@ const pad = n => String(n).padStart(2, '0');
 
 if (A.lookbook) {
   document.getElementById('count').textContent = 'LOOKBOOK · 9 OUTFITS';
-  board.style.height = '1200px';
-  inner.innerHTML = `<img class="abs lookbook" src="assets/albums/fashion_lookbook.jpg" alt="Nine outfit photos clipped to paper sheets">`;
+  board.style.height = '1300px';
+  inner.innerHTML = `<img class="abs lookbook" src="assets/albums/fashion_lookbook.jpg" alt="Nine outfit photos clipped to paper sheets">
+    <div class="abs updating">still updating<span>.</span><span>.</span><span>.</span></div>`;
 } else if (!A.spreads) {
   document.getElementById('count').textContent = 'PHOTO ALBUM';
   inner.innerHTML = `<div class="abs soon"><h2>coming soon…</h2><p>PHOTOS ARE ON THEIR WAY</p></div>`;
